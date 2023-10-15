@@ -1,11 +1,27 @@
 import Head from "next/head";
 import Link from "next/link";
 
+import React, { useState } from 'react';
+
 import { api } from "~/utils/api";
+import { generateText } from '~/utils/api';
 
 export default function Home() {
   const hello = api.example.hello.useQuery({ text: "from tRPC" });
+  const [userQuestion, setUserQuestion] = useState('');
+  const [claudeResponse, setClaudeResponse] = useState('');
+  const handleChange = (event) => {
+    setUserQuestion(event.target.value);
+  }
 
+  const handleSubmit = async () => {
+    const prompt = `\n\nHuman: ${userQuestion}\n\nAssistant:`;
+    
+    // call Claude API here with prompt
+    // Assuming the API call returns a promise that resolves with the generated text
+    const response = await api.claude.generateText(prompt);
+    setClaudeResponse(response);
+  }
   return (
     <>
       <Head>
@@ -16,35 +32,28 @@ export default function Home() {
       <main className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-[#2e026d] to-[#15162c]">
         <div className="container flex flex-col items-center justify-center gap-12 px-4 py-16 ">
           <h1 className="text-5xl font-extrabold tracking-tight text-white sm:text-[5rem]">
-            Create <span className="text-[hsl(280,100%,70%)]">T3</span> App
+             Generate new bedtime stories within seconds.
           </h1>
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:gap-8">
-            <Link
-              className="flex max-w-xs flex-col gap-4 rounded-xl bg-white/10 p-4 text-white hover:bg-white/20"
-              href="https://create.t3.gg/en/usage/first-steps"
-              target="_blank"
-            >
-              <h3 className="text-2xl font-bold">First Steps →</h3>
-              <div className="text-lg">
-                Just the basics - Everything you need to know to set up your
-                database and authentication.
-              </div>
-            </Link>
-            <Link
-              className="flex max-w-xs flex-col gap-4 rounded-xl bg-white/10 p-4 text-white hover:bg-white/20"
-              href="https://create.t3.gg/en/introduction"
-              target="_blank"
-            >
-              <h3 className="text-2xl font-bold">Documentation →</h3>
-              <div className="text-lg">
-                Learn more about Create T3 App, the libraries it uses, and how
-                to deploy it.
-              </div>
-            </Link>
-          </div>
-          <p className="text-2xl text-white">
-            {hello.data ? hello.data.greeting : "Loading tRPC query..."}
-          </p>
+      
+        </div>
+
+        <div className="mb-6">
+          <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+            Share with us a lesson you'd like to share with your child:
+          </label>
+
+          <input
+            id="user-question" 
+            className="block w-full p-4 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 sm:text-md focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            onChange={handleChange}
+            value={userQuestion}
+          />
+
+          {/* <button onClick={handleSubmit}>Submit</button> */}
+          <button onClick={handleSubmit} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+            Button
+          </button>
+
         </div>
       </main>
     </>

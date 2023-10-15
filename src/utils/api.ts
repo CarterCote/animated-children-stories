@@ -10,6 +10,18 @@ import { type inferRouterInputs, type inferRouterOutputs } from "@trpc/server";
 import superjson from "superjson";
 
 import { type AppRouter } from "~/server/api/root";
+import axios from 'axios';
+
+const API_KEY = process.env.CLAUDE_API_KEY;
+
+export const generateText = async (prompt) => {
+  const response = await axios.post('https://claude-api-url', {
+    prompt,
+    key: API_KEY,
+  });
+
+  return response.data;
+};
 
 const getBaseUrl = () => {
   if (typeof window !== "undefined") return ""; // browser should use relative url
