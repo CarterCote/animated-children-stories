@@ -7,7 +7,6 @@ import { api } from "~/utils/api";
 import { generateText } from '~/utils/api';
 
 export default function Home() {
-  const hello = api.example.hello.useQuery({ text: "from tRPC" });
   const [userQuestion, setUserQuestion] = useState('');
   const [claudeResponse, setClaudeResponse] = useState('');
   const handleChange = (event) => {
@@ -19,9 +18,9 @@ export default function Home() {
     
     // call Claude API here with prompt
     // Assuming the API call returns a promise that resolves with the generated text
-    const response = await api.claude.generateText(prompt);
+    const response = await generateText(userQuestion);
     setClaudeResponse(response);
-  }
+  };
   return (
     <>
       <Head>

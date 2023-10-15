@@ -15,12 +15,20 @@ import axios from 'axios';
 const API_KEY = process.env.CLAUDE_API_KEY;
 
 export const generateText = async (prompt) => {
-  const response = await axios.post('https://claude-api-url', {
-    prompt,
-    key: API_KEY,
+  const response = await axios.post('https://api.anthropic.com/v1/complete', {
+    model: 'claude-2',
+    prompt: `\n\nHuman: ${prompt}\n\nAssistant:`,
+    max_tokens_to_sample: 100000,
+  }, {
+    headers: {
+      'x-api-key': API_KEY,
+      'accept': 'application/json',
+      'content-type': 'application/json',
+      'anthropic-version': '2023-06-01',
+    },
   });
 
-  return response.data;
+  return response.data.completion;
 };
 
 const getBaseUrl = () => {
